@@ -27,7 +27,6 @@ wp-app/wp-content/themes/twenty*/
 wp-app/wp-content/plugins/hello.php
 
 # Uploads
-wp-app/wp-content/uploads/
 
 # Log files
 *.log
