@@ -1,0 +1,56 @@
+version: '3'
+services:
+
+  mysql:
+    image: mysql:8
+    container_name: ${APP_NAME}-mysql
+    environment:
+      - MYSQL_DATABASE=${DB_NAME}
+      - MYSQL_USER=${DB_USER}
+      - MYSQL_PASSWORD=${DB_PASS}
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./db.sql:/docker-entrypoint-initdb.d/db.sql
+    ports:
+      - ${IP}:3306:3306
+    networks:
+      - wpnet
+    restart: always
+
+  wordpress:
+    image: wordpress
+    container_name: ${APP_NAME}-wordpress
+    depends_on:
+      - mysql
+    environment:
+      - WORDPRESS_DB_HOST=${DB_HOST}
+      - WORDPRESS_DB_NAME=${DB_NAME}
+      - WORDPRESS_DB_USER=${DB_USER}
+      - WORDPRESS_DB_PASSWORD=${DB_PASS}
+    volumes:
+      - ./wp-app:/var/www/html
+    ports:
+      - ${IP}:80:80
+    networks:
+      - wpnet
+    restart: always
+
+  pma:
+    image: phpmyadmin/phpmyadmin
+    container_name: ${APP_NAME}-pma
+    environment:
+      PMA_HOST: ${DB_HOST}
+      PMA_PORT: 3306
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      UPLOAD_LIMIT: 50M
+    ports:
+      - ${IP}:9090:80
+    networks:
+      - wpnet
+    restart: always
+
+volumes:
+  db_data:
+networks:
+  wpnet:
