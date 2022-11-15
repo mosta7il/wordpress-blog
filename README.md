@@ -25,8 +25,8 @@
 
 ## API Endpoints
 
-- List all posts:
+- List all Articles:
     ```curl
-        GET  /wp-json/wp/v2/posts
+        GET  /wp-json/wp/v2/article
     ```
 
